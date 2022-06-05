@@ -2,14 +2,14 @@
 
 The Hotel Reservation Utility provides the following commands.
 
-### List All Rooms
+### List All Existing Rooms
 The conmand list below takes 0 argument and return a list of the existing rooms.
 
 ```
 list-room
 ```
 
-### List All Reservation of a Given Room
+### List All Reservations of a Given Room
 The conmand list below takes 1 argument and returns a list of reservations of the existing rooms.
 ```
 list-reservations ROOM_NUMBER
@@ -30,5 +30,5 @@ available ROOM_NUMBER START_DATE END_DATE
 ### Exit the Program
 The command below will terminate the program.
 ```
-esit
+exit
 ```
