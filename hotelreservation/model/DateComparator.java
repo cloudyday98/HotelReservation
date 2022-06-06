@@ -1,4 +1,4 @@
-package hotelreservation;
+package hotelreservation.model;
 
 import java.util.*;
 

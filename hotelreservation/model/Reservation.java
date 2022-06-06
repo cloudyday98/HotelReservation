@@ -1,4 +1,4 @@
-package hotelreservation;
+package hotelreservation.model;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -19,6 +19,13 @@ public class Reservation{
 
     public Date getCheckOut(){
         return this.checkOut;
+    }
+
+    public boolean hasConflict(Availability a){
+        return (this.checkIn.before(a.getEndDate()) && this.checkIn.after(a.getStartDate())) 
+            || (this.checkOut.before(a.getEndDate()) && this.checkOut.after(a.getStartDate()))
+            || (this.checkIn.after(a.getStartDate()) && this.checkOut.before(a.getEndDate()))
+            || (this.checkOut.after(a.getEndDate()) && this.checkIn.before(a.getStartDate()));
     }
 
     public boolean hasConflict(Reservation res){

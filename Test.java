@@ -1,83 +1,52 @@
 import hotelreservation.*;
+import hotelreservation.model.*;
+import hotelreservation.type.*;
 import java.util.*;
+import java.io.*;  
 
 public class Test {
     public static void main(String[] args){
-        HashMap<String, Room> rooms = new  HashMap<String, Room>();
-        rooms.put("1001", new Room("1001"));
-        rooms.put("1002", new Room("1002"));
-        rooms.put("2001", new Room("2001"));
+
+        Controller ctl = initializeController("sample_input/small.csv");
 
         Scanner scn = new Scanner(System.in);
         while (true){
             System.out.println("Enter Command: ");
-
             String[] cmds = scn.nextLine().split(" ");
 
             if (cmds.length < 1){
                 System.out.println("Invalid command, please re-enter");
             }
 
-            if (cmds[0].equals("list-room")){
-                for(String r : rooms.keySet()){
-                    System.out.println("room " + r);
-                }
+            else if (cmds[0].equals("list-rooms")){
+                ctl.printRooms();
             }
 
-            else if (cmds[0].equals("list-reservation")){
+            else if (cmds[0].equals("list-reservations")){
                 if (cmds.length < 2){
                     System.out.println("Invalid command, expecting 1 argument but got " + (cmds.length - 1));
                     continue;
                 }
-                String roomNumber = cmds[1];
-                if (!rooms.containsKey(roomNumber)){
-                    System.out.println("Invalid room number, please re-enter");
-                }
-                else{
-                    rooms.get(roomNumber).printReservations();
-                }
+                ctl.printReservastionsByRoomNumber(cmds[1]);
             }
 
-            else if (cmds[0].equals("reserve")){
+            else if (cmds[0].equals("check-available")){
                 if (cmds.length < 4){
                     System.out.println("Invalid command, expecting 3 argument but got " + (cmds.length - 1));
                     continue;
                 }
-
-                String roomNumber = cmds[1];
-                String startDate = cmds[2];
-                String endDate = cmds[3];
-
-                if (!rooms.containsKey(roomNumber)){
-                    System.out.println("Invalid room number, please re-enter");
-                    continue;
-                }
-
-                Room room = rooms.get(roomNumber);
-                room.addReservation(new Reservation(startDate, endDate));
-                rooms.put(roomNumber, room);
+                ctl.checkAvailability(cmds[1], cmds[2], cmds[3]);
             }
 
-            else if (cmds[0].equals("available")){
+
+            else if (cmds[0].equals("book")){
                 if (cmds.length < 4){
                     System.out.println("Invalid command, expecting 3 argument but got " + (cmds.length - 1));
                     continue;
                 }
-
-                String roomNumber = cmds[1];
-                String startDate = cmds[2];
-                String endDate = cmds[3];
-
-                Reservation res = new Reservation(startDate, endDate);
-
-                boolean result = rooms.get(roomNumber).checkAvailability(res);
-                if (result){
-                    System.out.println("Room is available for the given time period");
-                }
-                else{
-                    System.out.println("Room is NOT available for the given time period");
-                }
+                ctl.bookRoom(cmds[1], cmds[2], cmds[3]);
             }
+
 
             else if (cmds[0].equals("exit")){
                 return;
@@ -88,5 +57,23 @@ public class Test {
             }
 
         }
+    }
+
+    public static Controller initializeController(String path){
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(path));  
+            Controller controller = new Controller();
+            String line;
+            while ((line = reader.readLine()) != null){
+                String[] roomInfo = line.split(",");
+                controller.addRoom(roomInfo[0], roomInfo[1]);
+            }
+            return controller;
+        }
+        catch (IOException e)   
+        {  
+            e.printStackTrace();
+            return new Controller();
+        }  
     }
 }
