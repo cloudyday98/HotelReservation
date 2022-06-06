@@ -3,7 +3,6 @@ package hotelreservation;
 import hotelreservation.model.*;
 import hotelreservation.type.*;
 import java.util.*;
-import java.lang.IllegalArgumentException;
 
 public class Controller{
     private HashMap<String, Room> rooms;
@@ -15,7 +14,7 @@ public class Controller{
     }
 
     public void addRoom(String num, String t){
-        this.rooms.put(num, new Room(num, RoomType.valueOf(t)));
+        this.rooms.put(num, new Room(num, t));
         this.reservations.put(num, new ArrayList<Reservation>());
     }
 
@@ -77,20 +76,11 @@ public class Controller{
 
     public void checkAvailabilityByRoomType(String rType, String start, String end)
     {
-        RoomType _roomType;
-        try{
-             _roomType = RoomType.valueOf(rType);
-        }catch(IllegalArgumentException e){
-            System.out.println("Invalid Room Type: " + rType + ", Please re-enter");
-            return;
-        }
-        
-
         for (Map.Entry pair : this.rooms.entrySet()) {
             String number = (String) pair.getKey();
             Room room = (Room) pair.getValue();
 
-            if (room.getRoomType().equals(_roomType)){
+            if (room.compareRoomType(rType)){
                 Availability a = new Availability(start, end);
                 boolean available = true;
 
@@ -113,14 +103,21 @@ public class Controller{
             return;
         }
 
+        Reservation new_reservation = new Reservation(start, end);
+        if (!new_reservation.isValid()){
+            System.out.println("Room: " + num + " booking failed due to invalid date input");
+            return;
+        }
+
         if (!checkAvailabilityByRoomNumber(num, start, end)){
-            System.out.println("Room: " + num + " booking failed");
+            System.out.println("Room: " + num + " booking failed due to time conflict");
             return;
         }
 
         ArrayList<Reservation> res = this.reservations.get(num);
-        res.add(new Reservation(start, end));
+        res.add(new_reservation);
         this.reservations.put(num, res);
+        System.out.println("Room: " + num + ", From " + new_reservation.getCheckIn() + " to " + new_reservation.getCheckOut() + " booked successfully");
     }
 
     

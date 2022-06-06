@@ -36,13 +36,13 @@ list-reservations ROOM_NUMBER
 ### Book A Room for a Given Time Period
 The conmand list below takes 3 argument and returns a list of reservations of the existing rooms. The `START_DATE` and `END_DATE` arguments should take the form of `YYYY-MM-DD`. The `ROOM_NUMBER` and `ROOM_TYPE` can be acquired via the `list-rooms` command.
 ```
-book {ROOM_NUMBER|ROOM_TYPE} START_DATE END_DATE
+book ROOM_NUMBER START_DATE END_DATE
 ```
 
 ### Check the Availability of a Room for a Certain Time Period
 The conmand list below takes 3 argument and returns the availability of the room during the given time period. The `START_DATE` and `END_DATE` arguments should take the form of `YYYY-MM-DD`.
 ```
-check-available ROOM_NUMBER START_DATE END_DATE
+check-available {ROOM_NUMBER|ROOM_TYPE} START_DATE END_DATE
 ```
 
 ### Exit the Program
